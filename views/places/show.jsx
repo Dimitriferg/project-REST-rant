@@ -1,7 +1,36 @@
 const React = require("react");
-const Def = require("../default");
+const Def = require(".../default");
 
 function show(data) {
+  let rating = <h3 className="inactive">Not yet rated</h3>;
+  if (data.place.comments.length) {
+    let sumRatings = data.place.comments.reduce((tot, c) => {
+      return tot + c.stars;
+    }, 0);
+    let averageRating = Math.round(sumRatings / data.place.comments.length);
+    let stars = "";
+    for (let i = 0; i < averageRating; i++) {
+      stars += "⭐";
+    }
+    rating = <h3>{stars}</h3>;
+  }
+
+  let comments = <h3 className="inactive">No comments yet!</h3>;
+
+  if (data.place.comments.length) {
+    comments = data.place.comments.map((comment) => {
+      return (
+        <div className="border">
+          <h2 className="rant">{comment.rant ? "Rant!" : "Rave!"}</h2>
+          <h4>{comment.content}</h4>
+          <h3>
+            <strong> - {comment.author}</strong>
+          </h3>
+          <h4> Rating: {comment.stars}</h4>
+        </div>
+      );
+    });
+  }
   return (
     <Def>
       <main>
